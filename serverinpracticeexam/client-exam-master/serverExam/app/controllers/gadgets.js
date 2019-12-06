@@ -32,7 +32,7 @@ module.exports = function (app, config) {
                 if (todo) {
                     res.status(200).json(todo);
                 } else {
-                    res.status(404).json({ message: "No todo found" });
+                    res.status(404).json({ message: "No gadget found" });
                 }
             })
             .catch(error => {
@@ -53,7 +53,7 @@ module.exports = function (app, config) {
 
     router.route('/gadgets').post((req, res, next) => {
         logger.log('info', 'Create gadget');
-        var gadgettodo = new Gadget(req.body);
+        var gadget = new Gadget(req.body);
         gadget.save()
             .then(result => {
                 res.status(201).json(result);
@@ -62,24 +62,7 @@ module.exports = function (app, config) {
                 return next(err);
             });
     });
-    router.route('/gadgets/user/:id').get((req, res, next) => {
-        logger.log('info', 'Get all users gadgets');
-        var query=Gadget.find({userId: req.params.id})
-        .sort(req.query.order)
-        .exec()
-            .then(result => {
-                if (result && result.length) {
-                    res.status(200).json(result);
-                } else {
-                    res.status(404).json({ message: "No gadget found" });
-                }
-            })
-            .catch(error => {
-                return next(error);
 
-
-            });
-    });
     router.route('/gadgets/:id').delete((req, res, next) => {
         logger.log('info', 'Delete gadget ' + req.params.id);
         Gadget.remove({ _id: req.params.id })
